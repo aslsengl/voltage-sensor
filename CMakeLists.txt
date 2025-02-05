@@ -28,42 +28,42 @@ set(PICO_BOARD pico2 CACHE STRING "Board type")
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
-set(PROJ_NAME voltage_sensor)
-
-project(${PROJ_NAME} C CXX ASM)
+project(voltage_sensor C CXX ASM)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(${PROJ_NAME} main.c )
+add_executable(voltage_sensor 
+    main.c 
+    gpio_driver.c
+    )
 
-pico_set_program_name(${PROJ_NAME} ${PROJ_NAME})
-pico_set_program_version(${PROJ_NAME} "0.1")
+pico_set_program_name(voltage_sensor "voltage_sensor")
+pico_set_program_version(voltage_sensor "0.1")
 
 # Generate PIO header
-pico_generate_pio_header(${PROJ_NAME} ${CMAKE_CURRENT_LIST_DIR}/blink.pio)
+pico_generate_pio_header(voltage_sensor ${CMAKE_CURRENT_LIST_DIR}/blink.pio)
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(${PROJ_NAME} 1)
-pico_enable_stdio_usb(${PROJ_NAME} 0)
+pico_enable_stdio_uart(voltage_sensor 0)
+pico_enable_stdio_usb(voltage_sensor 1)
 
 # Add the standard library to the build
-target_link_libraries(${PROJ_NAME}
+target_link_libraries(voltage_sensor
         pico_stdlib)
 
 # Add the standard include files to the build
-target_include_directories(${PROJ_NAME} PRIVATE
+target_include_directories(voltage_sensor PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
 )
 
 # Add any user requested libraries
-target_link_libraries(${PROJ_NAME}
+target_link_libraries(voltage_sensor 
         hardware_spi
         hardware_i2c
         hardware_pio
         )
 
-pico_add_extra_outputs(${PROJ_NAME})
-
+pico_add_extra_outputs(voltage_sensor)
