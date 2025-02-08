@@ -38,6 +38,7 @@ pico_sdk_init()
 add_executable(voltage_sensor 
     main.c 
     gpio_driver.c
+    led_app.c  #LED Application file added 
     )
 
 pico_set_program_name(voltage_sensor "voltage_sensor")
@@ -57,6 +58,7 @@ target_link_libraries(voltage_sensor
 # Add the standard include files to the build
 target_include_directories(voltage_sensor PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/feature/led_app 
 )
 
 # Add any user requested libraries
