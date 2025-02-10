@@ -39,13 +39,11 @@ add_executable(voltage_sensor
     main.c 
     gpio_driver.c
     led_app.c  #LED Application file added 
+    uart_drv.c #UART driver file added
     )
 
 pico_set_program_name(voltage_sensor "voltage_sensor")
 pico_set_program_version(voltage_sensor "0.1")
-
-# Generate PIO header
-pico_generate_pio_header(voltage_sensor ${CMAKE_CURRENT_LIST_DIR}/blink.pio)
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(voltage_sensor 0)
@@ -59,13 +57,13 @@ target_link_libraries(voltage_sensor
 target_include_directories(voltage_sensor PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/feature/led_app 
+        ${CMAKE_CURRENT_LIST_DIR}/feature/uart_drv 
 )
 
 # Add any user requested libraries
 target_link_libraries(voltage_sensor 
         hardware_spi
         hardware_i2c
-        hardware_pio
         )
 
 pico_add_extra_outputs(voltage_sensor)
