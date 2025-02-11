@@ -40,6 +40,7 @@ add_executable(voltage_sensor
     gpio_driver.c
     led_app.c  #LED Application file added 
     uart_drv.c #UART driver file added
+    uart_app.c #UART Application file added
     )
 
 pico_set_program_name(voltage_sensor "voltage_sensor")
@@ -51,13 +52,16 @@ pico_enable_stdio_usb(voltage_sensor 1)
 
 # Add the standard library to the build
 target_link_libraries(voltage_sensor
-        pico_stdlib)
+        pico_stdlib
+        hardware_uart 
+)
 
 # Add the standard include files to the build
 target_include_directories(voltage_sensor PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/feature/led_app 
         ${CMAKE_CURRENT_LIST_DIR}/feature/uart_drv 
+        ${CMAKE_CURRENT_LIST_DIR}/feature/uart_app
 )
 
 # Add any user requested libraries
