@@ -6,11 +6,10 @@ uart_status uart_app_init(const uart_app_config_t *config){
         return UART_ERROR_UNKNOWN;  // Null control
     }
 
-    uart_init(UART_NUM_USED, config->baud_rate);
-    uart_set_format(UART_NUM_USED, config->data_bits, config->stop_bits, config->parity);
+    if (uart_driver_init(config->baud_rate, config->data_bits, config->stop_bits, config->parity) != 0){
+        return UART_ERROR_UNKNOWN;
+    }
 
-    gpio_set_function(4, GPIO_FUNC_UART); // TX
-    gpio_set_function(5, GPIO_FUNC_UART); // RX
 
     return UART_SUCCESS;
 } 
@@ -20,23 +19,21 @@ uart_status uart_app_write(uint8_t *data, uint16_t len){
         return UART_ERROR_UNKNOWN;  
     }
 
-    for(uint16_t i = 0; i < len; i++){
-        while(!uart_is_writable(UART_NUM_USED));
-        uart_putc(UART_NUM_USED, data[i]);
-    }
-
+    uart_driver_write(data, len);
+    
     return UART_SUCCESS;
 }
 
 uart_status uart_app_read(uint8_t *data, uint16_t len){
-    uint16_t bytesRead = 0;
-    for(uint16_t i = 0; i < len; i++){
-        if(uart_is_readable(UART_NUM_USED)){
-            data[i] = uart_getc(UART_NUM_USED);
-            bytesRead++;
-        } else {
-            break;
-        }
-    } 
-    return bytesRead;
+    if(!data){
+        return UART_ERROR_UNKNOWN;
+    }
+
+    int bytesRead = uart_driver_read(data, len);
+
+    if (bytesRead < 0){
+        return UART_ERROR_UNKNOWN;
+    }
+
+    return UART_SUCCESS; 
 }

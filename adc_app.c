@@ -1,11 +1,13 @@
 #include "adc_app.h"
 #include "adc_drv.h"
 
-adc_status_t adc_app_init(const adc_config_t *config){
-    if(config == NULL){
-        return ADC_ERROR_INIT;
-    }
-    if (adc_driver_init(config) != ADC_SUCCESS){
+adc_status_t adc_app_init(){
+    adc_config_t adc_config;
+
+    adc_config.channel = 0;
+    adc_config.vref = 3.3f;
+
+    if (adc_driver_init(&adc_config) != ADC_SUCCESS){
         return ADC_ERROR_INIT;
     }
     return ADC_SUCCESS;

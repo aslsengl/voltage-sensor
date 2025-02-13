@@ -8,11 +8,16 @@ adc_status_t adc_driver_init(const adc_config_t *config){
         return ADC_ERROR_INIT;
     }
 
+    if (config->channel > 3){
+        return ADC_ERROR_INIT;
+    }
+
     adc_init();
 
-    gpio_set_function(config->channel, 0x2);
+    gpio_set_pulls(26, false, false); // Disable pull up/down
+    adc_gpio_init(26);                // Initialize GPIO pin for ADC
 
-    adc_select_input(config->channel);
+    adc_select_input(config->channel);  // Select ADC channel
 
     adc_set_temp_sensor_enabled(false);
 
@@ -42,7 +47,7 @@ adc_status_t adc_driver_read_voltage(float *voltage){
     }
     
     // Convert raw ADC value to voltage
-    *voltage = ((float)raw_value * 3.3f) / 4095.0f;
+    *voltage = ((float)raw_value * ADC_VREF) / ADC_MAX_VALUE;
 
     return ADC_SUCCESS;
 }

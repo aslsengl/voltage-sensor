@@ -9,7 +9,7 @@ extern "C" {
 #include "hardware/adc.h"
 #include "adc_drv.h"
 
-adc_status_t adc_app_init(const adc_config_t *config);
+adc_status_t adc_app_init();
 
 adc_status_t adc_app_read_raw(uint16_t *value);
 
@@ -19,3 +19,4 @@ adc_status_t adc_app_read_voltage(float *voltage);
 }
 #endif
 #endif // __ADC_APP_H__
+

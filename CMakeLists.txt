@@ -63,11 +63,6 @@ target_link_libraries(voltage_sensor
 # Add the standard include files to the build
 target_include_directories(voltage_sensor PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
-        ${CMAKE_CURRENT_LIST_DIR}/feature/led_app 
-        ${CMAKE_CURRENT_LIST_DIR}/feature/uart_drv 
-        ${CMAKE_CURRENT_LIST_DIR}/feature/uart_app
-        ${CMAKE_CURRENT_LIST_DIR}/feature/adc_drv
-        ${CMAKE_CURRENT_LIST_DIR}/feature/adc_app
 )
 
 # Add any user requested libraries
