@@ -8,6 +8,9 @@ extern "C" {
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 
+#define ADC_VREF 3.3f
+#define ADC_MAX_VALUE 4095.0f
+
 typedef enum {
     ADC_SUCCESS = 0,
     ADC_ERROR_INIT = -1,
@@ -29,3 +32,4 @@ adc_status_t adc_driver_read_voltage(float *voltage);
 }
 #endif
 #endif // __ADC_DRV_H__
+
