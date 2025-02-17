@@ -43,6 +43,7 @@ add_executable(voltage_sensor
     uart_app.c  #UART Application file added
     adc_drv.c   #ADC driver file added
     adc_app.c   #ADC Application file added
+    measurement_app.c #Measurement Application file added
     )
 
 pico_set_program_name(voltage_sensor "voltage_sensor")
