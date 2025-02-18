@@ -44,6 +44,7 @@ add_executable(voltage_sensor
     adc_drv.c   #ADC driver file added
     adc_app.c   #ADC Application file added
     measurement_app.c #Measurement Application file added
+    timer_app.c #Timer Application file added
     )
 
 pico_set_program_name(voltage_sensor "voltage_sensor")
