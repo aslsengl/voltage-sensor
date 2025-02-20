@@ -1,6 +1,7 @@
 #include "measurement_app.h"
 #include "adc_app.h"
 #include "adc_drv.h"
+#include "filter_app.h"
 #include <stdio.h>
 
 static float R1 = DEFAULT_R1;
@@ -31,5 +32,15 @@ float measurement_app_get_voltage(uint16_t raw_value){
     if (raw_value < 0) return -1;
 
     float voltage = ((float)raw_value * (ADC_VREF / ADC_MAX_VALUE));
-    return voltage * ((R1 + R2) / R2);
+
+    float input_voltage = voltage * ((R1 + R2) / R2);
+
+    float filtered_voltage = filter_app_apply(input_voltage);
+
+    if(filtered_voltage < ADC_VREF) filtered_voltage = ADC_VREF;
+    if(filtered_voltage < 0) filtered_voltage = 0.0f;
+
+    return filtered_voltage;
+
+    //return voltage * ((R1 + R2) / R2);
 }

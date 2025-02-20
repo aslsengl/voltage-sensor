@@ -20,7 +20,7 @@ void my_timer_callback(void){
   } 
   
   if(voltage != -1){
-      printf("Periodic ADC Voltage: %.4f\n", voltage);
+      printf("Filtered Periodic ADC Voltage: %.4f\n", voltage);
   }
 }
 
