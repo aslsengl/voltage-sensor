@@ -12,7 +12,7 @@ extern "C" {
 
 void measurement_app_init(void);
 void measurement_app_set_resistors(float r1, float r2);
-float measurement_app_get_voltage(void);
+float measurement_app_get_voltage(uint16_t raw_value);
 float measurement_app_get_raw_adc(void);
 
 #ifdef __cplusplus

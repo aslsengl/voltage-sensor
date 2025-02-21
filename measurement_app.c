@@ -26,8 +26,8 @@ float measurement_app_get_raw_adc(void){
     }
 }
 
-float measurement_app_get_voltage(void){
-    uint16_t raw_value = measurement_app_get_raw_adc();
+float measurement_app_get_voltage(uint16_t raw_value){
+    
     if (raw_value < 0) return -1;
 
     float voltage = ((float)raw_value * (ADC_VREF / ADC_MAX_VALUE));

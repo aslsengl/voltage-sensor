@@ -6,12 +6,33 @@
 #include "uart_app.h"
 #include "adc_app.h"
 #include "measurement_app.h"
+#include "timer_app.h"
+
+// Initialize the timer
+void my_timer_callback(void){
+  printf("Timer Interrupt Triggered!\n");
+
+  uint16_t raw_value = measurement_app_get_raw_adc();
+  float voltage = measurement_app_get_voltage(raw_value);
+  
+  if(raw_value != (uint16_t)-1){
+      printf("Periodic ADC Raw Value: %d\n", raw_value);
+  } 
+  
+  if(voltage != -1){
+      printf("Periodic ADC Voltage: %.4f\n", voltage);
+  }
+}
 
 int main() {
     stdio_init_all();
     sleep_ms(2000);
 
-    led_init();                         // Initialize the LED
+    // Initialize the LED
+    led_init();               
+
+    // Initialize the timer
+    timer_app_start(TIMER_INTERVAL_US, my_timer_callback);
 
     uart_app_config_t uart_config = {
         .baud_rate = 115200,
@@ -27,16 +48,6 @@ int main() {
         return -1;
     }
 
-    /*if (adc_app_init() == ADC_SUCCESS){
-        printf("ADC Initialized\n");
-    } else {
-        printf("ADC Initialization failed\n");
-        return -1;
-    }*/
-
-    /*uint16_t raw_value = 0;
-    float voltage;*/
-
     measurement_app_init();
     measurement_app_set_resistors(DEFAULT_R1, DEFAULT_R2);
 
@@ -46,34 +57,6 @@ int main() {
     uint8_t rx_buffer[100]  = {0};
 
     while (1) {
-        uint16_t raw_value = measurement_app_get_raw_adc();
-        float voltage = measurement_app_get_voltage();
-
-        if(raw_value != (uint16_t)-1){
-            printf("Raw ADC Value: %d\n", raw_value);
-        } else {
-            printf("Failed to read raw ADC value\n");
-        }
-
-        if (voltage != -1){
-            printf("ADC Voltage: %.4f\n", voltage);
-        } else {
-            printf("Failed to read ADC voltage\n");
-        }
-
-        /*// Read raw value
-        if (adc_app_read_raw(&raw_value) == ADC_SUCCESS){
-            printf("Raw ADC Value: %d\n", raw_value);
-        } else {
-            printf("Failed to read raw ADC value\n");
-        }*/
-
-        /*// Read voltage
-        if(adc_app_read_voltage(&voltage) == ADC_SUCCESS){
-            printf("ADC Voltage: %.4f\n", voltage);
-        } else {
-            printf("Failed to read ADC voltage\n");
-        }*/
 
         uart_app_write(data, sizeof(data));  // Send data to UART
 
