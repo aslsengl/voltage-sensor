@@ -9,6 +9,8 @@ static float R2 = DEFAULT_R2;
 
 void measurement_app_init(void){
     adc_app_init();
+    filter_app_init(0.0f);
+    filter_app_set_type(FILTER_WEIGHTED);
 }
 
 void measurement_app_set_resistors(float r1, float r2){
