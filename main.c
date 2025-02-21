@@ -25,7 +25,7 @@ int main() {
         }
 
         led_toggle(LED_STATUS);     // Toggle the status LED
-        sleep_ms(1000);
+        sleep_ms(500);
     }
     return 0;
 }
