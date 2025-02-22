@@ -33,7 +33,7 @@ float filter_app_apply_weighted(float new_value){
     if (!new_value) {
         return s_filtered_value;
     }
-    if (fabs(new_value - s_filtered_value)  / fabs(new_value) > WEIGHT_NEW) {
+    if (fabs(new_value - s_filtered_value)  / fabs(new_value) > WEIGHT_NEW) { // mrc: >> zero division error?
         s_filtered_value = new_value;
         printf("Filter threshold exceed %f\n", s_filtered_value);
         return s_filtered_value;
@@ -69,13 +69,13 @@ float filter_app_apply_average(float new_value) {
 }
 
 // Apply the filter
-float filter_app_apply(float new_value){
+float filter_app_apply(float new_value){ // mrc: >> what if user wants both filters?
     switch(s_current_filter){
         case FILTER_WEIGHTED:
             return filter_app_apply_weighted(new_value);
         case FILTER_AVERAGE:
             return filter_app_apply_average(new_value);
-        case FILTER_NONE:
+        case FILTER_NONE: // mrc: >> more complex filters must be  added here
         default:
             return new_value;
     }

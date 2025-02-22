@@ -30,7 +30,7 @@ float measurement_app_get_raw_adc(void){
 
 float measurement_app_get_voltage(uint16_t raw_value){
     
-    if (raw_value < 0) return -1;
+    if (raw_value < 0) return -1; // mrc: >> raw value is unsigned, so it can not be negative ! 
 
     float voltage = ((float)raw_value * (ADC_VREF / ADC_MAX_VALUE));
 
