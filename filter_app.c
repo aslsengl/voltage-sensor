@@ -31,14 +31,14 @@ static uint8_t s_active_filters = FILTER_NONE;
 
 // Weighted filter
 float filter_app_apply_weighted(float _new_value){
-    printf("Applying weighted filter\n");
+    //printf("Applying weighted filter\n");
     float new_value = fabs(_new_value);
     if (!new_value) {
         return s_filtered_value;
     }
     if (fabs(new_value - s_filtered_value)  / new_value > WEIGHT_NEW) { // mrc: >> zero division error?
         s_filtered_value = new_value;
-        printf("Filter threshold exceed %f\n", s_filtered_value);
+        //printf("Filter threshold exceed %f\n", s_filtered_value);
         return s_filtered_value;
     }
     s_filtered_value = (WEIGHT_NEW * new_value) + (WEIGHT_OLD * s_filtered_value);
@@ -51,7 +51,7 @@ float filter_app_apply_weighted(float _new_value){
 
 // Average filter
 float filter_app_apply_average(float new_value) {
-    printf("Applying average filter\n");
+    //printf("Applying average filter\n");
     // Subtract the oldest value from sum before overwriting
     s_average_filter.sum -= s_average_filter.sample_buffer[s_average_filter.sample_index];
     

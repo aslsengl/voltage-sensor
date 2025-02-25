@@ -10,10 +10,9 @@ extern "C" {
 #define DEFAULT_R1 (100000.0f)      // 100k
 #define DEFAULT_R2 (10000.0f)       // 10k
 
+void measurement_app_reader_task(void);
+void measurement_app_comm_task(void);
 void measurement_app_init(void);
-void measurement_app_set_resistors(float r1, float r2);
-float measurement_app_get_voltage(uint16_t raw_value);
-float measurement_app_get_raw_adc(void);
 
 #ifdef __cplusplus
 }
