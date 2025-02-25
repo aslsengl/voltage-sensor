@@ -54,7 +54,6 @@ int main() {
     }
 
     measurement_app_init();
-    measurement_app_set_resistors(DEFAULT_R1, DEFAULT_R2);
 
     uint8_t data[] = "Hello from Pico2\r\n";
     uart_app_write(data, strlen((char *)data));

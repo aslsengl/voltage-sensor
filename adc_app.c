@@ -4,10 +4,10 @@
 adc_status_t adc_app_init(){
     adc_config_t adc_config;
 
-    adc_config.channel = 0;
+        adc_config.channel = 0;
     adc_config.vref = 3.3f;
 
-    if (adc_driver_init(&adc_config) != ADC_SUCCESS){
+        if (adc_driver_init(&adc_config) != ADC_SUCCESS){
         return ADC_ERROR_INIT;
     }
     return ADC_SUCCESS;

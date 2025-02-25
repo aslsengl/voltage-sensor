@@ -11,7 +11,6 @@
 #define AVERAGE_SAMPLE_COUNT        (20)                // Number of samples to average
 
 static float s_filtered_value           = 0.0f;             // First value
-static filter_type_t s_current_filter   = FILTER_AVERAGE;   // Default filter
 
 typedef struct
 {
@@ -28,12 +27,16 @@ static average_filter_t s_average_filter = {
     .sample_filled = 0
 };
 
+static uint8_t s_active_filters = FILTER_NONE;
+
 // Weighted filter
-float filter_app_apply_weighted(float new_value){
+float filter_app_apply_weighted(float _new_value){
+    printf("Applying weighted filter\n");
+    float new_value = fabs(_new_value);
     if (!new_value) {
         return s_filtered_value;
     }
-    if (fabs(new_value - s_filtered_value)  / fabs(new_value) > WEIGHT_NEW) {
+    if (fabs(new_value - s_filtered_value)  / new_value > WEIGHT_NEW) { // mrc: >> zero division error?
         s_filtered_value = new_value;
         printf("Filter threshold exceed %f\n", s_filtered_value);
         return s_filtered_value;
@@ -48,6 +51,7 @@ float filter_app_apply_weighted(float new_value){
 
 // Average filter
 float filter_app_apply_average(float new_value) {
+    printf("Applying average filter\n");
     // Subtract the oldest value from sum before overwriting
     s_average_filter.sum -= s_average_filter.sample_buffer[s_average_filter.sample_index];
     
@@ -69,28 +73,31 @@ float filter_app_apply_average(float new_value) {
 }
 
 // Apply the filter
-float filter_app_apply(float new_value){
-    switch(s_current_filter){
-        case FILTER_WEIGHTED:
-            return filter_app_apply_weighted(new_value);
-        case FILTER_AVERAGE:
-            return filter_app_apply_average(new_value);
-        case FILTER_NONE:
-        default:
-            return new_value;
+float filter_app_apply(float new_value){ // mrc: >> what if user wants both filters?
+
+    float filtered_value = new_value;
+    if (s_active_filters & FILTER_ENABLE_AVERAGE) {
+        filtered_value = filter_app_apply_average(filtered_value);
     }
+    if (s_active_filters & FILTER_ENABLE_WEIGHTED) {
+        filtered_value = filter_app_apply_weighted(filtered_value);
+    }
+    return filtered_value;
 }
 
-void filter_app_init(filter_type_t type)
+void filter_app_init(filter_enable_t type)
 {
-    s_current_filter = type;
-    //s_filtered_value = initial_value;
-    if (type == FILTER_AVERAGE) {
+    s_active_filters = type;
+    if (s_active_filters & FILTER_ENABLE_AVERAGE) {
+        printf("Average filter enabled\n");
         for (int i = 0; i < AVERAGE_SAMPLE_COUNT; i++)
         {
             s_average_filter.sample_buffer[i] = 0x00;
         }
         s_average_filter.sample_index = 0;
         s_average_filter.sample_filled = 0;
+    }
+    if (s_active_filters & FILTER_ENABLE_WEIGHTED) {
+        printf("Weighted filter enabled\n");
     }
 }
