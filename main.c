@@ -39,7 +39,7 @@ int main() {
     uart_app_write(data, strlen((char *)data));
 
     uint8_t rx_buffer[100]  = {0};
-
+    led_set_toggle(LED_STATUS, 100);
     while (1) {
         /*
         uart_app_write(data, sizeof(data));  // Send data to UART
@@ -52,9 +52,9 @@ int main() {
 
         sleep_ms(500);
         */
-        led_toggle(LED_STATUS);     // Toggle the status LED
         measurement_app_reader_task();
         measurement_app_comm_task();
+        led_toggle_task();
     }
     return 0;
 }

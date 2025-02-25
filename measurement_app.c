@@ -3,6 +3,7 @@
 #include "adc_app.h"
 #include "filter_app.h"
 #include "timer_app.h"
+#include "led_app.h"
 #include "measurement_app.h"
 
 #define MEASUREMENT_READ_INTERVAL_MS (1)
@@ -80,6 +81,9 @@ void measurement_app_comm_task(void)
         last_comm_time = current_time;
         printf("%s occured!\n", __func__);
         printf("Filtered Periodic ADC Voltage: %.4f\n", s_filtered_measurement_result.voltage);
+        uint32_t toogle_time = (uint32_t)(1000 / s_filtered_measurement_result.voltage);
+        printf("Toogle time: %d\n", toogle_time);
+        led_set_toggle(LED_STATUS, toogle_time);
     }
 }
 
