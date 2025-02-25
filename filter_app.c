@@ -1,18 +1,17 @@
+#include <stdio.h>
 #include <math.h>
 
-#include "filter_app.h"
 #include "pico/stdlib.h"
-#include <stdio.h>
-#include "measurement_app.h"
 #include "adc_drv.h"
 #include "filter_app.h"
+#include "measurement_app.h"
 
-#define WEIGHT_NEW 0.01f // Weight of the new value
-#define WEIGHT_OLD (1.0f - WEIGHT_NEW) // Weight of the old value
-#define AVERAGE_SAMPLE_COUNT 20 // Number of samples to average
+#define WEIGHT_NEW                  (0.01f)             // Weight of the new value
+#define WEIGHT_OLD                  (1.0f - WEIGHT_NEW) // Weight of the old value
+#define AVERAGE_SAMPLE_COUNT        (20)                // Number of samples to average
 
-static float filtered_value = 0.0f; // First value
-static filter_type_t current_filter = FILTER_AVERAGE; // Default filter
+static float s_filtered_value           = 0.0f;             // First value
+static filter_type_t s_current_filter   = FILTER_AVERAGE;   // Default filter
 
 typedef struct
 {
@@ -29,35 +28,22 @@ static average_filter_t s_average_filter = {
     .sample_filled = 0
 };
 
-void filter_app_init(float initial_value){
-    //filtered_value = initial_value;
-    for (int i = 0; i < AVERAGE_SAMPLE_COUNT; i++)
-    {
-        sample_buffer[i] = initial_value;
-    }
-    sample_index = 0;
-}
-
-void filter_app_set_type(filter_type_t type){
-    current_filter = type;
-}
-
 // Weighted filter
 float filter_app_apply_weighted(float new_value){
     if (!new_value) {
-        return filtered_value;
+        return s_filtered_value;
     }
-    if (fabs(new_value - filtered_value)  / fabs(new_value) > WEIGHT_NEW) {
-        filtered_value = new_value;
-        printf("Filter threshold exceed %f\n", filtered_value);
-        return filtered_value;
+    if (fabs(new_value - s_filtered_value)  / fabs(new_value) > WEIGHT_NEW) {
+        s_filtered_value = new_value;
+        printf("Filter threshold exceed %f\n", s_filtered_value);
+        return s_filtered_value;
     }
-    filtered_value = (WEIGHT_NEW * new_value) + (WEIGHT_OLD * filtered_value);
+    s_filtered_value = (WEIGHT_NEW * new_value) + (WEIGHT_OLD * s_filtered_value);
 
-    if(filtered_value < 0){
-        filtered_value = 0.0f;
+    if(s_filtered_value < 0){
+        s_filtered_value = 0.0f;
     }
-    return filtered_value;
+    return s_filtered_value;
 }
 
 // Average filter
@@ -84,7 +70,7 @@ float filter_app_apply_average(float new_value) {
 
 // Apply the filter
 float filter_app_apply(float new_value){
-    switch(current_filter){
+    switch(s_current_filter){
         case FILTER_WEIGHTED:
             return filter_app_apply_weighted(new_value);
         case FILTER_AVERAGE:
@@ -95,3 +81,16 @@ float filter_app_apply(float new_value){
     }
 }
 
+void filter_app_init(filter_type_t type)
+{
+    s_current_filter = type;
+    //s_filtered_value = initial_value;
+    if (type == FILTER_AVERAGE) {
+        for (int i = 0; i < AVERAGE_SAMPLE_COUNT; i++)
+        {
+            s_average_filter.sample_buffer[i] = 0x00;
+        }
+        s_average_filter.sample_index = 0;
+        s_average_filter.sample_filled = 0;
+    }
+}

@@ -54,7 +54,6 @@ int main() {
     }
 
     measurement_app_init();
-    filter_app_set_type(FILTER_AVERAGE);
     measurement_app_set_resistors(DEFAULT_R1, DEFAULT_R2);
 
     uint8_t data[] = "Hello from Pico2\r\n";

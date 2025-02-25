@@ -1,16 +1,15 @@
-#include "measurement_app.h"
-#include "adc_app.h"
-#include "adc_drv.h"
-#include "filter_app.h"
 #include <stdio.h>
+#include "adc_drv.h"
+#include "adc_app.h"
+#include "filter_app.h"
+#include "measurement_app.h"
 
 static float R1 = DEFAULT_R1;
 static float R2 = DEFAULT_R2; 
 
 void measurement_app_init(void){
     adc_app_init();
-    filter_app_init(0.0f);
-    filter_app_set_type(FILTER_WEIGHTED);
+    filter_app_init(FILTER_AVERAGE);
 }
 
 void measurement_app_set_resistors(float r1, float r2){

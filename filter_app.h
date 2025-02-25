@@ -14,9 +14,7 @@ typedef enum {
     FILTER_AVERAGE
 } filter_type_t;
 
-void filter_app_init(float initial_value);
-
-void filter_app_set_type(filter_type_t type);
+void filter_app_init(filter_type_t type);
 
 float filter_app_apply(float new_value);
 
